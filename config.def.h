@@ -1,5 +1,4 @@
-/* See LICENSE file for copyright and license details. */
-
+#include <X11/XF86keysym.h>
 /* appearance */
 static const unsigned int borderpx  = 4;        /* border pixel of windows */
 static const unsigned int gappx     = 4;        /* gaps between windows */
@@ -15,10 +14,12 @@ static const char col_gray2[]       = "#8393a6";
 static const char col_gray3[]       = "#ffffff";
 static const char col_gray4[]       = "#1b1d24";
 static const char col_cyan[]        = "#bcd3ee";
+static const char col_red[]        = "#bcd3ee";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeOcc]  = { "#aabbcc", col_gray1, col_gray2}
 };
 
 /* tagging */
@@ -63,6 +64,15 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
+
+
+static const char *mutevol[] = { "amixer", "set", "Master", "toggle",        NULL };
+static const char *downvol[] = { "amixer", "set", "Master", "5%-", "unmute", NULL };
+static const char *upvol[]   = { "amixer", "set", "Master", "5%+", "unmute", NULL };
+
+static const char *upbright[] = { "brightnessctl", "s", "+5%", NULL};
+static const char *downbright[] = { "brightnessctl", "s", "5%-", NULL};
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
@@ -101,6 +111,11 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{0, XF86XK_AudioLowerVolume, spawn, {.v = downvol }},
+	{0, XF86XK_AudioMute, spawn, {.v = mutevol }},
+	{0, XF86XK_AudioRaiseVolume, spawn, {.v = upvol }},
+	{0, XF86XK_MonBrightnessUp, spawn, {.v = upbright}},
+	{0, XF86XK_MonBrightnessDown, spawn, {.v = downbright}}
 };
 
 /* button definitions */
